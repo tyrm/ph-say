@@ -1,7 +1,7 @@
-from flask import Flask, request
-import boto3
 import os
+import boto3
 import playsound
+from flask import Flask, request
 from redis import StrictRedis
 from redis_lock import Lock
 
