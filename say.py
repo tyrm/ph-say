@@ -8,13 +8,13 @@ from redis_lock import Lock
 app = Flask(__name__)
 
 
-def say(speech_text):
+def say(speaker, speech_text):
     redis_host = os.getenv('REDIS_HOST', "127.0.0.1")
     conn = StrictRedis(host=redis_host)
 
     # Synthesize the sample text, saving it in an MP3 audio file
     polly_client = boto3.client('polly')
-    response = polly_client.synthesize_speech(VoiceId='Matthew',
+    response = polly_client.synthesize_speech(VoiceId=speaker,
                                               Engine='neural',
                                               OutputFormat='mp3',
                                               Text=speech_text)
@@ -34,16 +34,18 @@ def say(speech_text):
 
         os.remove("speech.mp3")
 
-def newscast(speech_text):
+
+def newscast(speaker, speech_text):
     redis_host = os.getenv('REDIS_HOST', "127.0.0.1")
     conn = StrictRedis(host=redis_host)
 
     # Synthesize the sample text, saving it in an MP3 audio file
     polly_client = boto3.client('polly')
-    response = polly_client.synthesize_speech(VoiceId='Matthew',
+    response = polly_client.synthesize_speech(VoiceId=speaker,
                                               Engine='neural',
                                               OutputFormat='mp3',
-                                              Text='<speak><amazon:domain name="news">{0}</amazon:domain></speak>'.format(speech_text),
+                                              Text='<speak><amazon:domain name="news">{0}</amazon:domain></speak>'.format(
+                                                  speech_text),
                                               TextType='ssml')
 
     with Lock(conn, "talking"):
@@ -61,15 +63,31 @@ def newscast(speech_text):
 
         os.remove("speech.mp3")
 
-@app.route('/')
-def hello_world():
+
+@app.route('/matthew')
+@app.route('/Matthew')
+def matthew_say():
     # here we want to get the value of user (i.e. ?user=some-value)
     speech_text = request.args.get('s')
     news_text = request.args.get('n')
     if speech_text is not None:
-        say(speech_text)
+        say("Matthew", speech_text)
     elif news_text is not None:
-        newscast(news_text)
+        newscast("Matthew", news_text)
+
+    return 'ok!'
+
+
+@app.route('/joanna')
+@app.route('/Joanna')
+def joanna_say():
+    # here we want to get the value of user (i.e. ?user=some-value)
+    speech_text = request.args.get('s')
+    news_text = request.args.get('n')
+    if speech_text is not None:
+        say("Joanna", speech_text)
+    elif news_text is not None:
+        newscast("Joanna", news_text)
 
     return 'ok!'
 
