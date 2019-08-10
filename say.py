@@ -1,6 +1,6 @@
 import os
 import boto3
-import playsound
+import pygame
 from flask import Flask, request
 from redis import StrictRedis
 from redis_lock import Lock
@@ -24,7 +24,14 @@ def say(speech_text):
             file.write(response['AudioStream'].read())
 
         print("Got the lock. Doing some work ...")
-        playsound.playsound('speech.mp3', True)
+
+        pygame.mixer.init()
+        pygame.mixer.music.load("speech.mp3")
+        pygame.mixer.music.play()
+
+        while pygame.mixer.music.get_busy() == True:
+            continue
+
         os.remove("speech.mp3")
 
 
