@@ -34,7 +34,6 @@ def say(speaker, speech_text):
         while pygame.mixer.music.get_busy() == True:
             continue
 
-        pygame.mixer.quit()
         os.remove("speech.mp3")
 
 
@@ -71,7 +70,6 @@ def say_w_beep(speaker, speech_text):
         while pygame.mixer.music.get_busy() == True:
             continue
 
-        pygame.mixer.quit()
         os.remove("speech.mp3")
 
 
