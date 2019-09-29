@@ -21,20 +21,15 @@ def say(speaker, speech_text):
                                               Text=speech_text)
 
     with Lock(conn, "talking"):
-        with open('speech.mp3', 'wb') as file:
-            file.write(response['AudioStream'].read())
-
         print("Got the lock. Doing some work ...")
 
         pygame.mixer.init()
-        pygame.mixer.music.load("speech.mp3")
+        pygame.mixer.music.load(response['AudioStream'])
         pygame.mixer.music.play()
 
         # Wait for Auudio to Finish
         while pygame.mixer.music.get_busy() == True:
             continue
-
-        os.remove("speech.mp3")
 
 
 def say_w_beep(speaker, speech_text):
@@ -49,9 +44,6 @@ def say_w_beep(speaker, speech_text):
                                               Text=speech_text)
 
     with Lock(conn, "talking"):
-        with open('speech.mp3', 'wb') as file:
-            file.write(response['AudioStream'].read())
-
         print("Got the lock. Doing some work ...")
 
         pygame.mixer.init()
@@ -63,14 +55,12 @@ def say_w_beep(speaker, speech_text):
         while pygame.mixer.music.get_busy() == True:
             continue
 
-        pygame.mixer.music.load("speech.mp3")
+        pygame.mixer.music.load(response['AudioStream'])
         pygame.mixer.music.play()
 
         # Wait for Auudio to Finish
         while pygame.mixer.music.get_busy() == True:
             continue
-
-        os.remove("speech.mp3")
 
 
 def newscast(speaker, speech_text):
@@ -87,19 +77,14 @@ def newscast(speaker, speech_text):
                                               TextType='ssml')
 
     with Lock(conn, "talking"):
-        with open('speech.mp3', 'wb') as file:
-            file.write(response['AudioStream'].read())
-
         print("Got the lock. Doing some work ...")
 
         pygame.mixer.init()
-        pygame.mixer.music.load("speech.mp3")
+        pygame.mixer.music.load(response['AudioStream'])
         pygame.mixer.music.play()
 
         while pygame.mixer.music.get_busy() == True:
             continue
-
-        os.remove("speech.mp3")
 
 
 @app.route('/matthew')
